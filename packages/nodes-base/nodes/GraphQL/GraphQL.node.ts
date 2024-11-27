@@ -514,22 +514,19 @@ export class GraphQL implements INodeType {
 					throw new NodeApiError(this.getNode(), response.errors as JsonObject, { message });
 				}
 			} catch (error) {
-				if (this.continueOnFail()) {
-					const errorData = this.helpers.returnJsonArray({
-						$error: error,
-						json: this.getInputData(itemIndex),
-						itemIndex,
-					});
-					const exectionErrorWithMetaData = this.helpers.constructExecutionMetaData(errorData, {
-						itemData: { item: itemIndex },
-					});
-					returnItems.push(...exectionErrorWithMetaData);
-					continue;
+				if (!this.continueOnFail) {
+					throw error;
 				}
-				throw error;
+
+				const errorData = this.helpers.returnJsonArray({
+					error: error.message,
+				});
+				const exectionErrorWithMetaData = this.helpers.constructExecutionMetaData(errorData, {
+					itemData: { item: itemIndex },
+				});
+				returnItems.push(...exectionErrorWithMetaData);
 			}
 		}
-
 		return [returnItems];
 	}
 }
