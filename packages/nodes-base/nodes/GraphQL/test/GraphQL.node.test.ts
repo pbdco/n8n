@@ -1,54 +1,28 @@
-import type { WorkflowTestData } from '@test/nodes/types';
-import { executeWorkflow } from '@test/nodes/ExecuteWorkflow';
-import * as Helpers from '@test/nodes/Helpers';
+import {
+	equalityTest,
+	getWorkflowFilenames,
+	initBinaryDataService,
+	setup,
+	workflowToTests,
+} from '@test/nodes/Helpers';
+import nock from 'nock';
 
 describe('GraphQL Node', () => {
-	const mockResponse = {
-		data: {
-			nodes: {},
-		},
-	};
+	const workflows = getWorkflowFilenames(__dirname);
+	const workflowTests = workflowToTests(workflows);
 
-	const tests: WorkflowTestData[] = [
-		{
-			description: 'should run Request Format JSON',
-			input: {
-				workflowData: Helpers.readJsonFileSync('nodes/GraphQL/test/workflow.json'),
-			},
-			output: {
-				nodeExecutionOrder: ['Start'],
-				nodeData: {
-					'Fetch Request Format JSON': [
-						[
-							{
-								json: mockResponse,
-							},
-						],
-					],
-				},
-			},
-			nock: {
-				baseUrl: 'https://api.n8n.io',
-				mocks: [
-					{
-						method: 'post',
-						path: '/graphql',
-						statusCode: 200,
-						responseBody: mockResponse,
-					},
-				],
-			},
-		},
-	];
-
-	const nodeTypes = Helpers.setup(tests);
-
-	test.each(tests)('$description', async (testData) => {
-		const { result } = await executeWorkflow(testData, nodeTypes);
-		const resultNodeData = Helpers.getResultNodeData(result, testData);
-		resultNodeData.forEach(({ nodeName, resultData }) =>
-			expect(resultData).toEqual(testData.output.nodeData[nodeName]),
-		);
-		expect(result.finished).toEqual(true);
+	beforeAll(async () => {
+		await initBinaryDataService();
+		nock.disableNetConnect();
 	});
+
+	afterAll(() => {
+		nock.restore();
+	});
+
+	const nodeTypes = setup(workflowTests);
+
+	for (const workflow of workflowTests) {
+		test(workflow.description, async () => await equalityTest(workflow, nodeTypes));
+	}
 });
