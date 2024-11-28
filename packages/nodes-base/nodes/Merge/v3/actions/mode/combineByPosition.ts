@@ -82,15 +82,11 @@ export async function execute(
 	} else {
 		numEntries = Math.min(...inputsData.map((input) => input.length), preferred.length);
 		if (numEntries === 0) {
-			return new NodeExecutionOutput(
-				[returnData],
-				[
-					{
-						message:
-							'Consider enabling "Include Any Unpaired Items" in options or check your inputs',
-					},
-				],
-			);
+			return new NodeExecutionOutput(returnData, [
+				{
+					message: 'Consider enabling "Include Any Unpaired Items" in options or check your inputs',
+				},
+			]);
 		}
 	}
 

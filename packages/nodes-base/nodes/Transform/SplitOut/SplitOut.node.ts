@@ -280,7 +280,7 @@ export class SplitOut implements INodeType {
 				}
 			}
 
-			if (hints.length) return new NodeExecutionOutput([returnData], hints);
+			if (hints.length) return [new NodeExecutionOutput(returnData, hints)];
 		}
 
 		return [returnData];

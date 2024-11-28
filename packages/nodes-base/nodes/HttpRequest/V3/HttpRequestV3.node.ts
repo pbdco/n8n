@@ -1002,16 +1002,15 @@ export class HttpRequestV3 implements INodeType {
 			returnItems[0].json.data &&
 			Array.isArray(returnItems[0].json.data)
 		) {
-			return new NodeExecutionOutput(
-				[returnItems],
-				[
+			return [
+				new NodeExecutionOutput(returnItems, [
 					{
 						message:
 							'To split the contents of ‘data’ into separate items for easier processing, add a ‘Spilt Out’ node after this one',
 						location: 'outputPane',
 					},
-				],
-			);
+				]),
+			];
 		}
 
 		return [returnItems];

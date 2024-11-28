@@ -58,15 +58,14 @@ export async function router(this: IExecuteFunctions): Promise<INodeExecutionDat
 	}
 
 	if (operation === 'select' && items.length > 1 && !node.executeOnce) {
-		return new NodeExecutionOutput(
-			[returnData],
-			[
+		return [
+			new NodeExecutionOutput(returnData, [
 				{
 					message: `This node ran ${items.length} times, once for each input item. To run for the first item only, enable 'execute once' in the node settings`,
 					location: 'outputPane',
 				},
-			],
-		);
+			]),
+		];
 	}
 
 	return [returnData];

@@ -10,8 +10,9 @@ describe('addPostExecutionWarning', () => {
 
 		const result = addPostExecutionWarning(returnData, inputItemsLength);
 
-		expect(result).toBeInstanceOf(NodeExecutionOutput);
-		expect((result as NodeExecutionOutput)?.getHints()).toEqual([
+		expect(result.length).toBe(1);
+		expect(result[0]).toBeInstanceOf(NodeExecutionOutput);
+		expect((result[0] as NodeExecutionOutput)?.getHints()).toEqual([
 			{
 				message:
 					'To make sure expressions after this node work, return the input items that produced each output item. <a target="_blank" href="https://docs.n8n.io/data/data-mapping/data-item-linking/item-linking-code-node/">More info</a>',
@@ -25,8 +26,9 @@ describe('addPostExecutionWarning', () => {
 
 		const result = addPostExecutionWarning(returnData, inputItemsLength);
 
-		expect(result).toBeInstanceOf(NodeExecutionOutput);
-		expect((result as NodeExecutionOutput)?.getHints()).toEqual([
+		expect(result.length).toBe(1);
+		expect(result[0]).toBeInstanceOf(NodeExecutionOutput);
+		expect((result[0] as NodeExecutionOutput)?.getHints()).toEqual([
 			{
 				message:
 					'To make sure expressions after this node work, return the input items that produced each output item. <a target="_blank" href="https://docs.n8n.io/data/data-mapping/data-item-linking/item-linking-code-node/">More info</a>',
