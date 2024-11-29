@@ -453,6 +453,10 @@ export class GraphQL implements INodeType {
 						operationName: this.getNodeParameter('operationName', itemIndex) as string,
 					};
 
+					if (jsonBody.operationName === '') {
+						jsonBody.operationName = null;
+					}
+
 					requestOptions.json = true;
 					requestOptions.body = jsonBody;
 				} else {
